@@ -6,18 +6,17 @@ using GraphQL.Conventions;
 namespace GraphQLApi.Schema
 {
     public class TeamSchema : ITeamSchema
-  {
-    private readonly IRequestHandler _requestHandler;
-    public TeamSchema(IDependencyInjector dependencyInjector)
     {
-        _requestHandler = RequestHandler
-          .New()
-          .WithQuery<TeamsQuery>()
-          .WithDependencyInjector(dependencyInjector)
-          .WithoutValidation()
-          .Generate();
+        private readonly IRequestHandler _requestHandler;
+        public TeamSchema(IDependencyInjector dependencyInjector)
+        {
+            _requestHandler = RequestHandler
+                .New()
+                .WithQuery<TeamsQuery>()
+                .WithDependencyInjector(dependencyInjector)
+                .WithoutValidation()
+                .Generate();
+        }
+        public Task<Response> ProcessRequest(Request request) => _requestHandler.ProcessRequest(request, new UserContext());
     }
-
-    public Task<Response> ProcessRequest(Request request) => _requestHandler.ProcessRequest(request, new UserContext());
-  }
 }

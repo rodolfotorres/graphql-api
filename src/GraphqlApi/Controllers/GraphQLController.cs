@@ -12,20 +12,20 @@ namespace GraphQLApi.Controllers
     [Route("api/[controller]")]
     public class GraphQLController : Controller
     {
-      private readonly ITeamSchema _teamSchema;
+        private readonly ITeamSchema _teamSchema;
 
-      public GraphQLController(ITeamSchema teamSchema)
-      {
-          _teamSchema = teamSchema;
-      }
+        public GraphQLController(ITeamSchema teamSchema)
+        {
+            _teamSchema = teamSchema;
+        }
 
-      [HttpPost("query")]
-      public async Task<IActionResult> Query()
-      {
-        StreamReader reader = new StreamReader(Request.Body);
-        var query = await reader.ReadToEndAsync();
-        var result = await _teamSchema.ProcessRequest(GraphQLWeb.Request.New(query));
-        return result.HasErrors ? (IActionResult)BadRequest(result) : Ok(result.Body);
-      }
+        [HttpPost("query")]
+        public async Task<IActionResult> Query()
+        {
+            StreamReader reader = new StreamReader(Request.Body);
+            var query = await reader.ReadToEndAsync();
+            var result = await _teamSchema.ProcessRequest(GraphQLWeb.Request.New(query));
+            return result.HasErrors ? (IActionResult)BadRequest(result) : Ok(result.Body);
+        }
     }
 }

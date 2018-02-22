@@ -6,6 +6,9 @@
 #Mac
 *.DS_Store
 
+#VS code
+.vscode/
+
 # User-specific files
 *.suo
 *.user

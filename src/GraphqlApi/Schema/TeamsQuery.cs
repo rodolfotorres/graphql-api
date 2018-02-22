@@ -6,20 +6,20 @@ using GraphQLApi.Schema.Types;
 
 namespace GraphQLApi.Schema
 {
-  [ImplementViewer(OperationType.Query)]
-  public class TeamsQuery
-  {
-    private readonly ITeamRepository _teamRepository;
+    [ImplementViewer(OperationType.Query)]
+    public class TeamsQuery
+    {
+        private readonly ITeamRepository _teamRepository;
 
-    public TeamsQuery(ITeamRepository teamRepository)
-    {
-        _teamRepository = teamRepository;
+        public TeamsQuery(ITeamRepository teamRepository)
+        {
+            _teamRepository = teamRepository;
+        }
+        [Description("Team Query")]
+        public async Task<Team> Team(NonNull<string> id)
+        {
+        var teamDto = await _teamRepository.GetTeamById(id);
+        return new Team(teamDto);
+        }
     }
-    [Description("Team Query")]
-    public async Task<Team> Team(NonNull<string> id)
-    {
-      var teamDto = await _teamRepository.GetTeamById(id);
-      return new Team(teamDto);
-    }
-  }
 }

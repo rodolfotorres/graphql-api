@@ -15,46 +15,40 @@ _Controller_
 [Route("api/[controller]")]
 public class GraphQLController : Controller
 {
-  private readonly ITeamSchema _teamSchema;
+    private readonly ITeamSchema _teamSchema;
 
-  public GraphQLController(ITeamSchema teamSchema)
-  {
-      _teamSchema = teamSchema;
-  }
+    public GraphQLController(ITeamSchema teamSchema)
+    {
+        _teamSchema = teamSchema;
+    }
 
-  [HttpPost("query")]
-  public async Task<IActionResult> Query()
-  {
-    StreamReader reader = new StreamReader(Request.Body);
-    var query = reader.ReadToEnd();
-    var result = await _teamSchema.ProcessRequest(GraphQLWeb.Request.New(query));
-    return result.HasErrors ? (IActionResult)BadRequest(result) : Ok(result.Body);
-  }
+    [HttpPost("query")]
+    public async Task<IActionResult> Query()
+    {
+        StreamReader reader = new StreamReader(Request.Body);
+        var query = reader.ReadToEnd();
+        var result = await _teamSchema.ProcessRequest(GraphQLWeb.Request.New(query));
+        return result.HasErrors ? (IActionResult)BadRequest(result) : Ok(result.Body);
+    }
 }
 ```
 
 _Schema_
 
 ```cs
-public class TeamSchema : ITeamSchema, IDependencyInjector
+public class TeamSchema : ITeamSchema
 {
-  private readonly ResolveTypeDelegate _resolveTypeDelegate;
-  private readonly IRequestHandler _requestHandler;
-
-  public TeamSchema(ResolveTypeDelegate resolveTypeDelegate)
-  {
-      _resolveTypeDelegate = resolveTypeDelegate;
-      _requestHandler = RequestHandler
-        .New()
-        .WithQuery<TeamsQuery>()
-        .WithDependencyInjector(this)
-        .WithoutValidation()
-        .Generate();
-  }
-
-  public Task<Response> ProcessRequest(Request request) => _requestHandler.ProcessRequest(request, new UserContext());
-
-  public object Resolve(TypeInfo typeInfo) => _resolveTypeDelegate?.Invoke(typeInfo.AsType());
+    private readonly IRequestHandler _requestHandler;
+    public TeamSchema(IDependencyInjector dependencyInjector)
+    {
+        _requestHandler = RequestHandler
+            .New()
+            .WithQuery<TeamsQuery>()
+            .WithDependencyInjector(dependencyInjector)
+            .WithoutValidation()
+            .Generate();
+    }
+    public Task<Response> ProcessRequest(Request request) => _requestHandler.ProcessRequest(request, new UserContext());
 }
 ```
 
@@ -63,18 +57,18 @@ _Query_
 [ImplementViewer(OperationType.Query)]
 public class TeamsQuery
 {
-  private readonly ITeamRepository _teamRepository;
+    private readonly ITeamRepository _teamRepository;
 
-  public TeamsQuery(ITeamRepository teamRepository)
-  {
-      _teamRepository = teamRepository;
-  }
-  [Description("Team Query")]
-  public async Task<Team> Team(NonNull<string> id)
-  {
-    var teamDto = await _teamRepository.GetTeamById(id);
-    return new Team(teamDto);
-  }
+    public TeamsQuery(ITeamRepository teamRepository)
+    {
+        _teamRepository = teamRepository;
+    }
+    [Description("Team Query")]
+    public async Task<Team> Team(NonNull<string> id)
+    {
+        var teamDto = await _teamRepository.GetTeamById(id);
+        return new Team(teamDto);
+    }
 }
 ```
 
@@ -82,7 +76,7 @@ _Repository_
 ```cs
 public class TeamRepository : ITeamRepository
 {
-  public Task<TeamDto> GetTeamById(string id) => Task.FromResult(new TeamDto { Id = id, Name = $"Namefor: {id}"});
+    public Task<TeamDto> GetTeamById(string id) => Task.FromResult(new TeamDto { Id = id, Name = $"Namefor: {id}"});
 }
 ```
 
@@ -91,36 +85,44 @@ _Type_
 ```cs
 public class Team : INode
 {
-  private readonly TeamDto _dto;
+    private readonly TeamDto _dto;
 
-  public Team(TeamDto dto)
-  {
-      _dto = dto;
-  }
-  [Description("Id")]
-  public Id Id => Id.New<Team>(_dto.Id);
+    public Team(TeamDto dto)
+    {
+        _dto = dto;
+    }
+    [Description("Id")]
+    public Id Id => Id.New<Team>(_dto.Id);
 
-  [Description("Name")]
-  public string Name => _dto.Name;
+    [Description("Name")]
+    public string Name => _dto.Name;
 }
 ```
 
 ## Dependency Injection
 
-Conventions needs a DI to resolve dependencies for graphql types. In this example `Team` type needs the `ITeamRepository` that is registered against .net core DI. 
+Conventions needs a DI to resolve dependencies for graphql types. In this example `Team` type needs the `ITeamRepository` that is registered against .net core DI.
 We pass in a delegate as part of the Schema constructor so it can resolve it
 ```cs
 public void ConfigureServices(IServiceCollection services)
 {
     services
+        .AddSingleton<IDependencyInjector, GraphQLDependencyInjector>()
         .AddSingleton<ITeamRepository, TeamRepository>()
         .AddSingleton<TeamsQuery, TeamsQuery>()
-        .AddSingleton<ITeamSchema>(c => new TeamSchema(ResolveReferenceType))
+        .AddSingleton<ITeamSchema, TeamSchema>()
         .AddMvc();
 }
 
-public object ResolveReferenceType(Type type)
+public class GraphQLDependencyInjector : IDependencyInjector
 {
-    return _serviceProvider.GetService(type);
+    private readonly IServiceProvider _serviceProvider;
+
+    public GraphQLDependencyInjector(IServiceProvider serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
+    }
+
+    public object Resolve(TypeInfo typeInfo) => _serviceProvider.GetService(typeInfo.AsType());
 }
 ```

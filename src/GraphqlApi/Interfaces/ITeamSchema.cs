@@ -5,6 +5,6 @@ namespace GraphQLApi.Interfaces
 {
   public interface ITeamSchema
   {
-    Task<Response> ProcessRequest(Request request);
+      Task<Response> ProcessRequest(Request request);
   }
 }

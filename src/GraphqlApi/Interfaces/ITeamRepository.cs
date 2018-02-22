@@ -5,6 +5,6 @@ namespace GraphQLApi.Interfaces
 {
     public interface ITeamRepository
     {
-      Task<TeamDto> GetTeamById(string id);
+        Task<TeamDto> GetTeamById(string id);
     }
 }
