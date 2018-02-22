@@ -5,6 +5,41 @@
 
 This is a small tutorial on how to integrate [GraphQL Conventions](https://github.com/graphql-dotnet/conventions) with a .net core mvc app.
 
+## Instructions
+
+_Url_
+http://localhost:5000/api/graphql/query
+
+_Query_
+```javascript
+query _($teamId: String!) {
+  viewer {
+    team(id: $teamId) {
+      id
+      name
+    }
+  }
+}
+```
+_Variables_
+```javascript
+{"teamId":"2252141"}
+```
+
+_Result_
+```javascript
+{
+  "data": {
+    "viewer": {
+      "team": {
+        "id": "VGVhbToyMjUyMTQx",
+        "name": "Namefor: 2252141"
+      }
+    }
+  }
+}
+```
+
 ## Structure
 
 On this example we want to expose Team information
@@ -26,7 +61,7 @@ public class GraphQLController : Controller
     public async Task<IActionResult> Query()
     {
         StreamReader reader = new StreamReader(Request.Body);
-        var query = reader.ReadToEnd();
+        var query = await reader.ReadToEndAsync();
         var result = await _teamSchema.ProcessRequest(GraphQLWeb.Request.New(query));
         return result.HasErrors ? (IActionResult)BadRequest(result) : Ok(result.Body);
     }
@@ -102,7 +137,7 @@ public class Team : INode
 ## Dependency Injection
 
 Conventions needs a DI to resolve dependencies for graphql types. In this example `Team` type needs the `ITeamRepository` that is registered against .net core DI.
-We pass in a delegate as part of the Schema constructor so it can resolve it
+We provide a wrapper for .net core `IServiceProvider`
 ```cs
 public void ConfigureServices(IServiceCollection services)
 {
