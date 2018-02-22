@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GraphQL.Conventions;
 using GraphQLApi.Interfaces;
 using GraphQLApi.Repositories;
 using GraphQLApi.Schema;
@@ -16,8 +17,6 @@ namespace GraphQLApi
 {
     public class Startup
     {
-        private IServiceProvider _serviceProvider;
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -29,9 +28,10 @@ namespace GraphQLApi
         public void ConfigureServices(IServiceCollection services)
         {
             services
+                .AddSingleton<IDependencyInjector, GraphQLDependencyInjector>()
                 .AddSingleton<ITeamRepository, TeamRepository>()
                 .AddSingleton<TeamsQuery, TeamsQuery>()
-                .AddSingleton<ITeamSchema>(c => new TeamSchema(ResolveReferenceType))
+                .AddSingleton<ITeamSchema, TeamSchema>()
                 .AddMvc();
         }
 
@@ -43,14 +43,7 @@ namespace GraphQLApi
                 app.UseDeveloperExceptionPage();
             }
 
-            _serviceProvider = app.ApplicationServices;
-
             app.UseMvc();
-        }
-
-        public object ResolveReferenceType(Type type)
-        {
-            return _serviceProvider.GetService(type);
         }
     }
 }
