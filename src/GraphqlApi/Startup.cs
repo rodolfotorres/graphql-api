@@ -16,7 +16,7 @@ namespace GraphQLApi
 {
     public class Startup
     {
-        private ServiceProvider _serviceProvider;
+        private IServiceProvider _serviceProvider;
 
         public Startup(IConfiguration configuration)
         {
@@ -33,7 +33,6 @@ namespace GraphQLApi
                 .AddSingleton<TeamsQuery, TeamsQuery>()
                 .AddSingleton<ITeamSchema>(c => new TeamSchema(ResolveReferenceType))
                 .AddMvc();
-            _serviceProvider = services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +42,8 @@ namespace GraphQLApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            _serviceProvider = app.ApplicationServices;
 
             app.UseMvc();
         }
