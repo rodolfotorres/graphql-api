@@ -16,8 +16,6 @@ namespace GraphQLApi.Schema
   {
     private readonly ResolveTypeDelegate _resolveTypeDelegate;
     private readonly IRequestHandler _requestHandler;
-    private readonly Dictionary<TypeInfo, object> _registrations = new Dictionary<TypeInfo, object>();
-
     public TeamSchema(ResolveTypeDelegate resolveTypeDelegate)
     {
         _resolveTypeDelegate = resolveTypeDelegate;
@@ -30,7 +28,6 @@ namespace GraphQLApi.Schema
     }
 
     public Task<Response> ProcessRequest(Request request) => _requestHandler.ProcessRequest(request, new UserContext());
-
     public object Resolve(TypeInfo typeInfo) => _resolveTypeDelegate?.Invoke(typeInfo.AsType());
   }
 }

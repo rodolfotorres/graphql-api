@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GraphQLApi.Controllers
 {
-  [Route("api/[controller]")]
+    [Route("api/[controller]")]
     public class GraphQLController : Controller
     {
       private readonly ITeamSchema _teamSchema;
@@ -23,11 +23,8 @@ namespace GraphQLApi.Controllers
       public async Task<IActionResult> Query()
       {
         StreamReader reader = new StreamReader(Request.Body);
-
-        var query = reader.ReadToEnd();
-        Console.WriteLine(query);
+        var query = await reader.ReadToEndAsync();
         var result = await _teamSchema.ProcessRequest(GraphQLWeb.Request.New(query));
-
         return result.HasErrors ? (IActionResult)BadRequest(result) : Ok(result.Body);
       }
     }
