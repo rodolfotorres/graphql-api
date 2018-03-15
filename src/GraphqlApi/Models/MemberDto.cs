@@ -3,7 +3,7 @@ using GraphQL.Conventions.Relay;
 
 namespace GraphQLApi.Models
 {
-    public class TeamDto
+    public class MemberDto
     {
         public string Id { get; set; }
         public string Name { get; set; }

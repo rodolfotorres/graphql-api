@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using GraphQLApi.Interfaces;
+using GraphQLApi.Models;
 using GraphQLApi.Schema.Types;
 
 namespace GraphQLApi.Repositories

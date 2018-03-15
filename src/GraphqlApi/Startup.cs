@@ -29,8 +29,10 @@ namespace GraphQLApi
         {
             services
                 .AddSingleton<IDependencyInjector, GraphQLDependencyInjector>()
+                .AddSingleton<IMemberRepository, MemberRepository>()
                 .AddSingleton<ITeamRepository, TeamRepository>()
                 .AddSingleton<TeamsQuery, TeamsQuery>()
+                .AddSingleton<TeamsMutation, TeamsMutation>()
                 .AddSingleton<ITeamSchema, TeamSchema>()
                 .AddMvc();
         }

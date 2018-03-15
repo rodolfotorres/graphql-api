@@ -15,11 +15,12 @@ namespace GraphQLApi.Schema
         {
             _teamRepository = teamRepository;
         }
+
         [Description("Team Query")]
         public async Task<Team> Team(NonNull<string> id)
         {
-        var teamDto = await _teamRepository.GetTeamById(id);
-        return new Team(teamDto);
+            var teamDto = await _teamRepository.GetTeamById(id);
+            return Types.Team.FromDto(teamDto);
         }
     }
 }
