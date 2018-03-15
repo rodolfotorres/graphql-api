@@ -10,7 +10,6 @@ namespace GraphQLApi.Schema.Types
     public class Team : INode
     {
         private TeamDto _dto;
-
         public static Team FromDto(TeamDto dto) => dto != null ? new Team { _dto = dto } : null;
 
         [Description("Id")]
@@ -20,11 +19,10 @@ namespace GraphQLApi.Schema.Types
         public string Name => _dto.Name;
 
         [Description("Member")]
-
         public async Task<List<Member>> Members([Inject] IMemberRepository memberRepository)
         {
-          var members = await memberRepository.GetMembersForTeam(_dto.Id);
-          return members.ConvertAll(Member.FromDto);
+            var members = await memberRepository.GetMembersForTeam(_dto.Id);
+            return members.ConvertAll(Member.FromDto);
         }
     }
 }
