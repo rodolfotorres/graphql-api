@@ -13,6 +13,7 @@ namespace GraphQLApi.Schema
             _requestHandler = RequestHandler
                 .New()
                 .WithQueryAndMutation<TeamsQuery, TeamsMutation>()
+                //.WithSubscription<TeamsSubscription>()
                 .WithDependencyInjector(dependencyInjector)
                 .WithoutValidation()
                 .Generate();

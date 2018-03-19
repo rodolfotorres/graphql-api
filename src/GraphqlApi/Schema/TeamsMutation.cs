@@ -24,8 +24,8 @@ namespace GraphQLApi.Schema
         {
             var member = memberInput.Value.ToDto();
             var result = await _memberRepository.AddMember(teamId, member);
-
-            return Member.FromDto(result);
+            var addMember = Member.FromDto(result);
+            return addMember;
         }
     }
 }

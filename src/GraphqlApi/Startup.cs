@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using GraphQL.Conventions;
 using GraphQLApi.Interfaces;
@@ -33,6 +34,7 @@ namespace GraphQLApi
                 .AddSingleton<ITeamRepository, TeamRepository>()
                 .AddSingleton<TeamsQuery, TeamsQuery>()
                 .AddSingleton<TeamsMutation, TeamsMutation>()
+                .AddSingleton<TeamsSubscription, TeamsSubscription>()
                 .AddSingleton<ITeamSchema, TeamSchema>()
                 .AddMvc();
         }
@@ -45,7 +47,12 @@ namespace GraphQLApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=GraphiQL}/{action=Index}");
+            });
         }
     }
 }
