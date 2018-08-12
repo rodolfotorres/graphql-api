@@ -18,6 +18,9 @@ namespace GraphQLApi.Schema.Types
         [Description("Name")]
         public string Name => _dto.Name;
 
+        [Description("City")]
+        public string City => _dto.City;
+
         [Description("Member")]
         public async Task<List<Member>> Members([Inject] IMemberRepository memberRepository)
         {
