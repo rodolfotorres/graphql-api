@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using GraphQL.Conventions;
+using GraphQL.Server.Ui.Playground;
 using GraphQLApi.Interfaces;
 using GraphQLApi.Repositories;
 using GraphQLApi.Schema;
@@ -46,13 +47,12 @@ namespace GraphQLApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseMvc(routes =>
+            app.UseGraphQLPlayground(new GraphQLPlaygroundOptions
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=GraphiQL}/{action=Index}");
+                Path = string.Empty,
+                GraphQLEndPoint = "/api/graphql"
             });
+            app.UseMvc();
         }
     }
 }
