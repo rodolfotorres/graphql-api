@@ -47,10 +47,11 @@ namespace GraphQLApi
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseGraphQL<ITeamSchema>();
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions
             {
                 Path = string.Empty,
-                GraphQLEndPoint = "/api/graphql"
+                GraphQLEndPoint = "/graphql"
             });
             app.UseMvc();
         }

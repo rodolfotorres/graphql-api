@@ -3,8 +3,8 @@ using GraphQL.Conventions.Web;
 
 namespace GraphQLApi.Interfaces
 {
-  public interface ITeamSchema : ISchema
+    public interface ISchema
   {
-
+      Task<Response> ProcessRequest(Request request);
   }
 }
