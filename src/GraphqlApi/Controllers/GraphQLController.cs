@@ -19,7 +19,7 @@ namespace GraphQLApi.Controllers
             _teamSchema = teamSchema;
         }
 
-        [HttpPost("query")]
+        [HttpPost("")]
         public async Task<IActionResult> Query()
         {
             StreamReader reader = new StreamReader(Request.Body);
