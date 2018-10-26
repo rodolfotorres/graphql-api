@@ -8,7 +8,8 @@ This is a small tutorial on how to integrate [GraphQL Conventions](https://githu
 ## Instructions
 
 _Url_
-http://localhost:5000/api/graphql/query
+API: http://localhost:5000/api/graphql/query
+Frontend: http://localhost:5000
 
 _Query_
 ```javascript
@@ -161,3 +162,7 @@ public class GraphQLDependencyInjector : IDependencyInjector
     public object Resolve(TypeInfo typeInfo) => _serviceProvider.GetService(typeInfo.AsType());
 }
 ```
+
+## Soon
+[ ] Data loader example
+[ ] Subscription for members
