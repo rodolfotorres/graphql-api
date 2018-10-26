@@ -8,8 +8,8 @@ This is a small tutorial on how to integrate [GraphQL Conventions](https://githu
 ## Instructions
 
 _Url_
-API: http://localhost:5000/api/graphql/query
-Frontend: http://localhost:5000
+- API: http://localhost:5000/api/graphql/query
+- Frontend: http://localhost:5000
 
 _Query_
 ```javascript
@@ -164,5 +164,5 @@ public class GraphQLDependencyInjector : IDependencyInjector
 ```
 
 ## Soon
-[ ] Data loader example
-[ ] Subscription for members
+- [ ] Data loader example
+- [ ] Subscription for members
