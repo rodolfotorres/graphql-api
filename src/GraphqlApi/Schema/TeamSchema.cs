@@ -8,7 +8,7 @@ namespace GraphQLApi.Schema
     public class TeamSchema : ITeamSchema
     {
         private readonly IRequestHandler _requestHandler;
-        public TeamSchema(IDependencyInjector dependencyInjector)
+        public TeamSchema(IDependencyInjector dependencyInjector = null)
         {
             _requestHandler = RequestHandler
                 .New()
@@ -19,5 +19,7 @@ namespace GraphQLApi.Schema
                 .Generate();
         }
         public Task<Response> ProcessRequest(Request request) => _requestHandler.ProcessRequest(request, new UserContext());
+
+        public string Describe(bool returnJson = false) => _requestHandler.DescribeSchema(returnJson);
     }
 }

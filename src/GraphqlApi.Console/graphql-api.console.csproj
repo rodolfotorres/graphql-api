@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>graphql_api.console</RootNamespace>
+  </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="echo After Build: $(ProjectDir)" />
+    <Exec Command="dotnet $(OutDir)\graphql-api.console.dll -schema > ..\..\graphql.schema" />
+  </Target>
+  <ItemGroup>
+    <ProjectReference Include="..\GraphqlApi\graphql-api.csproj" />
+  </ItemGroup>
+</Project>
