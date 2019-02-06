@@ -19,13 +19,5 @@ namespace GraphQLApi.Schema
         {
             _memberRepository = memberRepository;
         }
-
-        // [Description("Subscriptions for members")]
-        // public Member SubscriptionForMembers()
-        // {
-        //     var member = new MemberDto {Id = Guid.NewGuid().ToString(), Name="adasd"};
-
-        //     return Member.FromDto(member);
-        // }
     }
 }

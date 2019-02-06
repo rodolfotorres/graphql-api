@@ -7,6 +7,6 @@ namespace GraphQLApi.Repositories
 {
     public class TeamRepository : ITeamRepository
     {
-        public Task<TeamDto> GetTeamById(string id) => Task.FromResult(new TeamDto { Id = id, Name = $"Namefor: {id}"});
+        public Task<TeamDto> GetTeamById(string id) => Task.FromResult(new TeamDto { Id = id, Name = $"The Great Team {id}", City = "Lisbon"});
     }
 }
